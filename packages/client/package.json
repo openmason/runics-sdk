@@ -1,5 +1,5 @@
 {
-	"name": "runics-client",
+	"name": "@runics/client",
 	"version": "0.2.0",
 	"description": "TypeScript SDK for the Runics semantic skill search API",
 	"type": "module",

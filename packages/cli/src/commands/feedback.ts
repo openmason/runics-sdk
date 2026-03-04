@@ -1,6 +1,6 @@
 import { defineCommand } from "citty";
 import consola from "consola";
-import { RunicsClient } from "runics-client";
+import { RunicsClient } from "@runics/client";
 import { resolveConfig } from "../config.js";
 
 const VALID_FEEDBACK_TYPES = ["click", "use", "dismiss", "explicit_good", "explicit_bad"] as const;

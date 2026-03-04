@@ -1,4 +1,4 @@
-import type { FindSkillResponse } from "runics-client";
+import type { FindSkillResponse } from "@runics/client";
 import { describe, expect, it, vi } from "vitest";
 import { formatTable } from "../../formatters/table.js";
 

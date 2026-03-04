@@ -1,4 +1,4 @@
-import type { CompositionResult } from "runics-client";
+import type { CompositionResult } from "@runics/client";
 import { describe, expect, it, vi } from "vitest";
 import { formatComposition } from "../../formatters/composition.js";
 

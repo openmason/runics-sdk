@@ -1,6 +1,6 @@
 import chalk from "chalk";
 import Table from "cli-table3";
-import type { FindSkillResponse } from "runics-client";
+import type { FindSkillResponse } from "@runics/client";
 
 export interface TableFormatterOptions {
 	showTrace?: boolean;

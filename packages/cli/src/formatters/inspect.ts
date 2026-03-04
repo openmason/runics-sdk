@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import type { Skill } from "runics-client";
+import type { Skill } from "@runics/client";
 
 export function formatInspect(skill: Skill): void {
 	// Header

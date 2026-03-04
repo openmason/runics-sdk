@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import type { CompositionResult } from "runics-client";
+import type { CompositionResult } from "@runics/client";
 
 export function formatComposition(composition: CompositionResult): void {
 	if (!composition.detected) {
