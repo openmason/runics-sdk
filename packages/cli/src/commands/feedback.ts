@@ -52,6 +52,7 @@ export const feedback = defineCommand({
 
 		const client = new RunicsClient({
 			baseUrl: config.url,
+			tenantId: config.tenantId,
 		});
 
 		await client.submitFeedback({

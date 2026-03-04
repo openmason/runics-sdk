@@ -15,6 +15,7 @@ export const config = defineCommand({
 		console.log(
 			`  API Key:     ${resolvedConfig.apiKey ? `${resolvedConfig.apiKey.substring(0, 10)}...` : "(not set)"}`,
 		);
+		console.log(`  Tenant ID:   ${resolvedConfig.tenantId}`);
 		console.log(`  Limit:       ${resolvedConfig.defaultLimit}`);
 		console.log(`  Min Trust:   ${resolvedConfig.defaultMinTrust}`);
 	},

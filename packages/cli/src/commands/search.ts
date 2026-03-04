@@ -60,6 +60,7 @@ export const search = defineCommand({
 		// Create client
 		const client = new RunicsClient({
 			baseUrl: config.url,
+			tenantId: config.tenantId,
 		});
 
 		// Build search options

@@ -5,7 +5,7 @@ export const SkillResultSchema = z.object({
 	id: z.string(),
 	name: z.string(),
 	slug: z.string(),
-	agentSummary: z.string(),
+	agentSummary: z.string().nullable(),
 	trustScore: z.number(),
 	executionLayer: z.string(),
 	capabilitiesRequired: z.array(z.string()),
@@ -54,7 +54,7 @@ export const SearchMetaSchema = z.object({
 // FindSkillResponse schema
 export const FindSkillResponseSchema = z.object({
 	results: z.array(SkillResultSchema),
-	confidence: z.enum(["high", "medium", "low", "none"]),
+	confidence: z.enum(["high", "medium", "low", "none", "no_match"]),
 	enriched: z.boolean(),
 	composition: CompositionResultSchema.optional(),
 	searchTrace: SearchTraceSchema.optional(),

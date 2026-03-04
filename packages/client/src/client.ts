@@ -20,6 +20,7 @@ import type {
 
 export class RunicsClient {
 	private baseUrl: string;
+	private tenantId?: string;
 	private retry: number;
 	private retryDelay: number;
 	private timeout: number;
@@ -28,6 +29,7 @@ export class RunicsClient {
 
 	constructor(options: RunicsClientOptions = {}) {
 		this.baseUrl = options.baseUrl || "http://localhost:8787";
+		this.tenantId = options.tenantId;
 		this.retry = options.retry ?? 3;
 		this.retryDelay = options.retryDelay ?? 500;
 		this.timeout = options.timeout ?? 10000;
@@ -110,14 +112,21 @@ export class RunicsClient {
 
 	async findSkill(query: string, options?: FindSkillOptions): Promise<FindSkillResponse> {
 		try {
-			const body = {
+			const body: Record<string, unknown> = {
 				query,
-				limit: options?.limit,
-				minTrustScore: options?.minTrustScore,
-				maxTier: options?.maxTier,
-				executionLayer: options?.executionLayer,
-				capabilitiesRequired: options?.capabilitiesRequired,
 			};
+
+			// Add tenantId if provided
+			if (this.tenantId) {
+				body.tenantId = this.tenantId;
+			}
+
+			// Add optional fields only if they have values
+			if (options?.limit !== undefined) body.limit = options.limit;
+			if (options?.minTrustScore !== undefined) body.minTrustScore = options.minTrustScore;
+			if (options?.maxTier !== undefined) body.maxTier = options.maxTier;
+			if (options?.executionLayer) body.executionLayer = options.executionLayer;
+			if (options?.capabilitiesRequired) body.capabilitiesRequired = options.capabilitiesRequired;
 
 			const data = await this.fetch<unknown>("/v1/search", {
 				method: "POST",

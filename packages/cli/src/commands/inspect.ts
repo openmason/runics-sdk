@@ -32,6 +32,7 @@ export const inspect = defineCommand({
 
 		const client = new RunicsClient({
 			baseUrl: config.url,
+			tenantId: config.tenantId,
 		});
 
 		const skill = await client.getSkill(args.slug);

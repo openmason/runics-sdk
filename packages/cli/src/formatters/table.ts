@@ -60,8 +60,8 @@ export function formatTable(
 	}
 
 	const headers = showTrace
-		? ["Skill", "Score", "Trust", "Match Source", "Match Text"]
-		: ["Skill", "Score", "Trust", "Match Source"];
+		? ["Skill", "Summary", "Score", "Trust", "Execution", "Caps", "Match Source", "Match Text"]
+		: ["Skill", "Summary", "Score", "Trust", "Execution", "Caps", "Match Source"];
 
 	const table = new Table({
 		head: headers.map((h) => chalk.bold(h)),
@@ -69,13 +69,38 @@ export function formatTable(
 			head: [],
 			border: [],
 		},
+		wordWrap: true,
+		colWidths: showTrace
+			? [25, 35, 7, 7, 12, 10, 13, 18]
+			: [25, 35, 7, 7, 12, 10, 13],
 	});
 
 	for (const result of response.results) {
+		// Format execution layer
+		const execLayer = result.executionLayer;
+		const execDisplay =
+			execLayer === "worker"
+				? chalk.green("worker")
+				: execLayer === "mcp-remote"
+					? chalk.yellow("mcp-remote")
+					: execLayer;
+
+		// Format capabilities
+		const caps = result.capabilitiesRequired;
+		const capsDisplay =
+			caps.length === 0
+				? chalk.green("none")
+				: caps.length <= 2
+					? caps.join(", ")
+					: `${caps.slice(0, 2).join(", ")}...`;
+
 		const row = [
 			result.name,
+			result.agentSummary || chalk.gray("(no summary)"),
 			result.score.toFixed(2),
 			result.trustScore.toFixed(2),
+			execDisplay,
+			capsDisplay,
 			result.matchSource,
 		];
 

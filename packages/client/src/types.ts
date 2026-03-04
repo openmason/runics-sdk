@@ -48,6 +48,7 @@ export interface ListSkillsOptions {
 
 export interface RunicsClientOptions {
 	baseUrl?: string;
+	tenantId?: string;
 	retry?: number;
 	retryDelay?: number;
 	timeout?: number;

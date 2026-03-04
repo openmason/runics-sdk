@@ -1,6 +1,6 @@
 {
 	"name": "runics",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "Command-line interface for the Runics semantic skill search API",
 	"type": "module",
 	"keywords": ["runics", "cli", "skills", "semantic-search", "mcp"],

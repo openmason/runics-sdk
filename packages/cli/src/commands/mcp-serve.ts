@@ -33,6 +33,7 @@ export const mcpServe = defineCommand({
 
 		const client = new RunicsClient({
 			baseUrl: config.url,
+			tenantId: config.tenantId,
 		});
 
 		const server = createRunicsMcpServer(client, {
