@@ -1,5 +1,5 @@
-import { defineCommand } from "citty";
 import { RunicsClient } from "@runics/client";
+import { defineCommand } from "citty";
 import { resolveConfig } from "../config.js";
 import { formatInspect } from "../formatters/inspect.js";
 import { formatJson } from "../formatters/json.js";

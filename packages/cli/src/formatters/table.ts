@@ -1,6 +1,6 @@
+import type { FindSkillResponse } from "@runics/client";
 import chalk from "chalk";
 import Table from "cli-table3";
-import type { FindSkillResponse } from "@runics/client";
 
 export interface TableFormatterOptions {
 	showTrace?: boolean;
@@ -70,9 +70,7 @@ export function formatTable(
 			border: [],
 		},
 		wordWrap: true,
-		colWidths: showTrace
-			? [25, 35, 7, 7, 12, 10, 13, 18]
-			: [25, 35, 7, 7, 12, 10, 13],
+		colWidths: showTrace ? [25, 35, 7, 7, 12, 10, 13, 18] : [25, 35, 7, 7, 12, 10, 13],
 	});
 
 	for (const result of response.results) {

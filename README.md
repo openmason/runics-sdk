@@ -2,8 +2,8 @@
 
 [![CI](https://github.com/openmason/runics-sdk/actions/workflows/ci.yml/badge.svg)](https://github.com/openmason/runics-sdk/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![npm (client)](https://img.shields.io/npm/v/runics-client)](https://www.npmjs.com/package/runics-client)
-[![npm (cli)](https://img.shields.io/npm/v/runics)](https://www.npmjs.com/package/runics)
+[![npm (client)](https://img.shields.io/npm/v/@runics/client)](https://www.npmjs.com/package/@runics/client)
+[![npm (cli)](https://img.shields.io/npm/v/@runics/cli)](https://www.npmjs.com/package/@runics/cli)
 
 A TypeScript monorepo providing programmatic and CLI access to the Runics semantic skill search API.
 
@@ -13,8 +13,8 @@ Runics is a semantic search service for discovering reusable skills across agent
 
 ## Packages
 
-- **[runics-client](./packages/client/)** — TypeScript SDK for the Runics API
-- **[runics](./packages/cli/)** — Command-line interface for querying Runics
+- **[@runics/client](./packages/client/)** — TypeScript SDK for the Runics API
+- **[@runics/cli](./packages/cli/)** — Command-line interface for querying Runics
 
 ## Quick Start
 
@@ -39,7 +39,16 @@ pnpm lint:fix
 
 ## Documentation
 
-See [runics-sdk-requirements.md](./runics-sdk-requirements.md) for the full requirements specification.
+- [CLI Usage Guide](./CLI-USAGE.md) - Comprehensive CLI documentation
+- [CHANGELOG](./CHANGELOG.md) - Release history and changes
+- [CONTRIBUTING](./CONTRIBUTING.md) - Contribution guidelines
+- [Client Package README](./packages/client/README.md) - SDK documentation
+- [CLI Package README](./packages/cli/README.md) - CLI documentation
+
+## Published Packages
+
+- npm: [@runics/client](https://www.npmjs.com/package/@runics/client)
+- npm: [@runics/cli](https://www.npmjs.com/package/@runics/cli)
 
 ## License
 

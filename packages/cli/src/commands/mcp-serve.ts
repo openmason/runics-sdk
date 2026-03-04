@@ -1,8 +1,8 @@
 import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { RunicsClient, createRunicsMcpServer } from "@runics/client";
 import { defineCommand } from "citty";
 import consola from "consola";
-import { RunicsClient, createRunicsMcpServer } from "@runics/client";
 import { resolveConfig } from "../config.js";
 
 export const mcpServe = defineCommand({

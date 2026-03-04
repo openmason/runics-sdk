@@ -1,7 +1,7 @@
-# runics-client
+# @runics/client
 
-[![npm version](https://img.shields.io/npm/v/runics-client)](https://www.npmjs.com/package/runics-client)
-[![npm downloads](https://img.shields.io/npm/dm/runics-client)](https://www.npmjs.com/package/runics-client)
+[![npm version](https://img.shields.io/npm/v/@runics/client)](https://www.npmjs.com/package/@runics/client)
+[![npm downloads](https://img.shields.io/npm/dm/@runics/client)](https://www.npmjs.com/package/@runics/client)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 TypeScript SDK for the Runics semantic skill search API.
@@ -9,7 +9,7 @@ TypeScript SDK for the Runics semantic skill search API.
 ## Installation
 
 ```bash
-npm install runics-client
+npm install @runics/client
 ```
 
 ## Usage
@@ -17,7 +17,7 @@ npm install runics-client
 ### Basic Search
 
 ```typescript
-import { RunicsClient } from 'runics-client';
+import { RunicsClient } from '@runics/client';
 
 const client = new RunicsClient({
   baseUrl: 'https://runics.example.com'
@@ -55,7 +55,7 @@ await client.submitFeedback({
 Create an MCP server that exposes Runics as tools for any MCP-compatible agent runtime:
 
 ```typescript
-import { RunicsClient, createRunicsMcpServer } from 'runics-client';
+import { RunicsClient, createRunicsMcpServer } from '@runics/client';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio';
 
 const client = new RunicsClient();

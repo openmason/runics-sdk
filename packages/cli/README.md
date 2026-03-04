@@ -1,7 +1,7 @@
-# runics
+# @runics/cli
 
-[![npm version](https://img.shields.io/npm/v/runics)](https://www.npmjs.com/package/runics)
-[![npm downloads](https://img.shields.io/npm/dm/runics)](https://www.npmjs.com/package/runics)
+[![npm version](https://img.shields.io/npm/v/@runics/cli)](https://www.npmjs.com/package/@runics/cli)
+[![npm downloads](https://img.shields.io/npm/dm/@runics/cli)](https://www.npmjs.com/package/@runics/cli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Command-line interface for the Runics semantic skill search API.
@@ -9,7 +9,12 @@ Command-line interface for the Runics semantic skill search API.
 ## Installation
 
 ```bash
-npm install -g runics
+npm install -g @runics/cli
+```
+
+Or use with npx:
+```bash
+npx @runics/cli search "your query"
 ```
 
 ## Quick Start
