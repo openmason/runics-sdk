@@ -1,0 +1,18 @@
+# Source files
+src/
+tsconfig.json
+tsup.config.ts
+
+# Tests
+**/__tests__/
+*.test.ts
+vitest.config.ts
+
+# Development files
+.turbo/
+*.tsbuildinfo
+
+# Documentation (included in npm README)
+README.md
+
+# Keep only dist/ for production

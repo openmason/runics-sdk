@@ -1,0 +1,44 @@
+{
+	"name": "runics-client",
+	"version": "0.1.0",
+	"description": "TypeScript SDK for the Runics semantic skill search API",
+	"type": "module",
+	"keywords": ["runics", "skills", "semantic-search", "mcp", "api-client"],
+	"homepage": "https://github.com/openmason/runics-sdk#readme",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/openmason/runics-sdk.git",
+		"directory": "packages/client"
+	},
+	"bugs": {
+		"url": "https://github.com/openmason/runics-sdk/issues"
+	},
+	"author": "OpenMason",
+	"license": "MIT",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs"
+		}
+	},
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"files": ["dist"],
+	"scripts": {
+		"build": "tsup",
+		"test": "vitest run",
+		"typecheck": "tsc --noEmit"
+	},
+	"dependencies": {
+		"@modelcontextprotocol/sdk": "^1.0.4",
+		"ofetch": "^1.4.1",
+		"zod": "^3.24.1"
+	},
+	"devDependencies": {
+		"tsup": "^8.3.5",
+		"typescript": "^5.7.0",
+		"vitest": "^2.1.8"
+	}
+}
