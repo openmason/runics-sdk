@@ -16,7 +16,7 @@
 	"author": "OpenMason",
 	"license": "MIT",
 	"bin": {
-		"runics": "./dist/index.mjs"
+		"runics": "./dist/index.js"
 	},
 	"files": ["dist"],
 	"scripts": {
