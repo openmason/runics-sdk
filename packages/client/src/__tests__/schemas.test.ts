@@ -222,6 +222,7 @@ describe("SkillSchema", () => {
 			cogniumScanned: true,
 			cogniumReport: { safe: true },
 			capabilitiesRequired: ["filesystem"],
+			executionLayer: "mcp-remote",
 			createdAt: "2024-01-01T00:00:00Z",
 			updatedAt: "2024-01-01T00:00:00Z",
 		};

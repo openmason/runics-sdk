@@ -60,8 +60,8 @@ export function formatTable(
 	}
 
 	const headers = showTrace
-		? ["Skill", "Summary", "Score", "Trust", "Execution", "Caps", "Match Source", "Match Text"]
-		: ["Skill", "Summary", "Score", "Trust", "Execution", "Caps", "Match Source"];
+		? ["Skill", "Summary", "Score", "Trust", "Author", "Tags", "Stars", "Error%", "Match Source", "Match Text"]
+		: ["Skill", "Summary", "Score", "Trust", "Author", "Tags", "Stars", "Error%"];
 
 	const table = new Table({
 		head: headers.map((h) => chalk.bold(h)),
@@ -70,39 +70,48 @@ export function formatTable(
 			border: [],
 		},
 		wordWrap: true,
-		colWidths: showTrace ? [25, 35, 7, 7, 12, 10, 13, 18] : [25, 35, 7, 7, 12, 10, 13],
+		colWidths: showTrace ? [20, 30, 6, 6, 12, 12, 6, 7, 13, 18] : [20, 30, 6, 6, 12, 12, 6, 7],
 	});
 
 	for (const result of response.results) {
-		// Format execution layer
-		const execLayer = result.executionLayer;
-		const execDisplay =
-			execLayer === "worker"
-				? chalk.green("worker")
-				: execLayer === "mcp-remote"
-					? chalk.yellow("mcp-remote")
-					: execLayer;
+		// Format author
+		const author = result.authorHandle
+			? result.authorType === "bot"
+				? chalk.cyan(`@${result.authorHandle}`)
+				: `@${result.authorHandle}`
+			: chalk.gray("unknown");
 
-		// Format capabilities
-		const caps = result.capabilitiesRequired;
-		const capsDisplay =
-			caps.length === 0
-				? chalk.green("none")
-				: caps.length <= 2
-					? caps.join(", ")
-					: `${caps.slice(0, 2).join(", ")}...`;
+		// Format tags
+		const tags = result.tags
+			? result.tags.length === 0
+				? chalk.gray("none")
+				: result.tags.slice(0, 2).join(", ") + (result.tags.length > 2 ? "..." : "")
+			: chalk.gray("none");
+
+		// Format stars
+		const stars = result.humanStarCount !== undefined ? result.humanStarCount.toString() : "-";
+
+		// Format error rate
+		const errorRate =
+			result.errorRate !== undefined
+				? result.errorRate > 0.1
+					? chalk.red((result.errorRate * 100).toFixed(1))
+					: chalk.green((result.errorRate * 100).toFixed(1))
+				: "-";
 
 		const row = [
 			result.name,
 			result.agentSummary || chalk.gray("(no summary)"),
 			result.score.toFixed(2),
 			result.trustScore.toFixed(2),
-			execDisplay,
-			capsDisplay,
-			result.matchSource,
+			author,
+			tags,
+			stars,
+			errorRate,
 		];
 
 		if (showTrace) {
+			row.push(result.matchSource);
 			row.push(result.matchText || "-");
 		}
 

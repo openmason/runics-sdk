@@ -1,6 +1,6 @@
 {
 	"name": "@runics/client",
-	"version": "0.2.0",
+	"version": "5.0.0",
 	"description": "TypeScript SDK for the Runics semantic skill search API",
 	"type": "module",
 	"keywords": ["runics", "skills", "semantic-search", "mcp", "api-client"],
