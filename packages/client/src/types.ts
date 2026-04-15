@@ -14,8 +14,10 @@ import type {
 	CopyInputSchema,
 	CostBreakdownSchema,
 	DependentNodeSchema,
+	EvalListResponseSchema,
 	EvalResultSchema,
 	EvalRunResultSchema,
+	EvalRunSummarySchema,
 	ExtendInputSchema,
 	FailedQuerySchema,
 	FindSkillResponseSchema,
@@ -32,15 +34,20 @@ import type {
 	MatchSourceStatsSchema,
 	PaginatedSkillListSchema,
 	PublishSkillInputSchema,
+	RevokedImpactResponseSchema,
 	SearchMetaSchema,
 	SearchTraceSchema,
 	SkillResultSchema,
 	SkillSchema,
+	SkillVersionSchema,
+	SkillVersionsResponseSchema,
 	StarStatusSchema,
+	StatusChangeInputSchema,
 	Tier3PatternSchema,
 	TierDistributionSchema,
 	UpdateSkillInputSchema,
 	UploadBundleResultSchema,
+	VulnerableUsageResponseSchema,
 } from "./schemas.js";
 
 // Inferred types from Zod schemas
@@ -106,6 +113,21 @@ export type EvalResult = z.infer<typeof EvalResultSchema>;
 export type AdminScanResult = z.infer<typeof AdminScanResultSchema>;
 export type AdminBackfillResult = z.infer<typeof AdminBackfillResultSchema>;
 
+// v5.2 types - Skill Versions
+export type SkillVersion = z.infer<typeof SkillVersionSchema>;
+export type SkillVersionsResponse = z.infer<typeof SkillVersionsResponseSchema>;
+
+// v5.2 types - Eval List
+export type EvalRunSummary = z.infer<typeof EvalRunSummarySchema>;
+export type EvalListResponse = z.infer<typeof EvalListResponseSchema>;
+
+// v5.2 types - Analytics
+export type RevokedImpactResponse = z.infer<typeof RevokedImpactResponseSchema>;
+export type VulnerableUsageResponse = z.infer<typeof VulnerableUsageResponseSchema>;
+
+// v5.0 types - Status Change
+export type StatusChangeInput = z.infer<typeof StatusChangeInputSchema>;
+
 // Client options
 export interface FindSkillOptions {
 	limit?: number;
@@ -117,6 +139,9 @@ export interface FindSkillOptions {
 	appetite?: "strict" | "cautious" | "balanced" | "adventurous";
 	tags?: string[];
 	category?: string;
+	// v5.2 fields
+	runtimeEnv?: ("llm" | "api" | "browser" | "vm" | "local")[];
+	visibility?: "public" | "private" | "unlisted";
 }
 
 export interface FeedbackParams {

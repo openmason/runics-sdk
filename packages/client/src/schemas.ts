@@ -64,6 +64,9 @@ export const SkillResultSchema = z.object({
 	revokedReason: z.string().optional(),
 	remediationMessage: z.string().optional(),
 	remediationUrl: z.string().optional(),
+	// v5.2 fields
+	runtimeEnv: z.enum(["llm", "api", "browser", "vm", "local"]).optional(),
+	visibility: z.enum(["public", "private", "unlisted"]).optional(),
 });
 
 // CompositionPart schema
@@ -181,6 +184,13 @@ export const SkillSchema = z.object({
 	revokedReason: z.string().optional(),
 	remediationMessage: z.string().optional(),
 	remediationUrl: z.string().optional(),
+	// v5.2 fields
+	runtimeEnv: z.enum(["llm", "api", "browser", "vm", "local"]).optional(),
+	visibility: z.enum(["public", "private", "unlisted"]).optional(),
+	environmentVariables: z.array(z.string()).optional(),
+	shareUrl: z.string().optional(),
+	// v5.4 fields
+	workflowDefinition: z.record(z.string(), z.unknown()).nullable().optional(),
 });
 
 // PaginatedSkillList schema
@@ -553,11 +563,19 @@ export const PublishSkillInputSchema = z.object({
 	version: z.string().optional(),
 	description: z.string().min(10).max(2000),
 	schemaJson: z.record(z.string(), z.unknown()).optional(),
-	executionLayer: z.enum(["mcp-remote", "instructions", "worker", "container"]),
+	executionLayer: z.enum([
+		"mcp-remote",
+		"instructions",
+		"worker",
+		"container",
+		"composite",
+	]),
 	mcpUrl: z.string().optional(),
 	skillMd: z.string().optional(),
 	capabilitiesRequired: z.array(z.string()).optional(),
-	source: z.enum(["manual", "forge", "cognium"]).optional(),
+	source: z
+		.enum(["manual", "forge", "human-distilled", "mcp-registry", "clawhub", "github"])
+		.optional(),
 	sourceUrl: z.string().optional(),
 	tenantId: z.string().optional(),
 	trustScore: z.number().min(0).max(1).optional(),
@@ -572,35 +590,99 @@ export const PublishSkillInputSchema = z.object({
 		.enum(["atomic", "auto-composite", "human-composite", "forked"])
 		.optional(),
 	forkedFrom: z.string().optional(),
+	// v5.2 fields
+	runtimeEnv: z.enum(["llm", "api", "browser", "vm", "local"]).optional(),
+	visibility: z.enum(["public", "private", "unlisted"]).optional(),
+	environmentVariables: z.array(z.string()).optional(),
+	// v5.4 fields
+	workflowDefinition: z.record(z.string(), z.unknown()).optional(),
 });
 
 export const UpdateSkillInputSchema = z.object({
 	name: z.string().min(1).max(200).optional(),
 	description: z.string().min(10).max(2000).optional(),
 	schemaJson: z.record(z.string(), z.unknown()).optional(),
-	executionLayer: z
-		.enum(["mcp-remote", "instructions", "worker", "container"])
-		.optional(),
 	mcpUrl: z.string().optional(),
 	skillMd: z.string().optional(),
 	capabilitiesRequired: z.array(z.string()).optional(),
-	trustScore: z.number().min(0).max(1).optional(),
 	tags: z.array(z.string()).optional(),
 	category: z.string().optional(),
-	// v5 fields
-	skillType: z
-		.enum(["atomic", "auto-composite", "human-composite", "forked"])
-		.optional(),
-	status: z
-		.enum([
-			"published",
-			"deprecated",
-			"archived",
-			"draft",
-			"vulnerable",
-			"revoked",
-			"degraded",
-			"contains-vulnerable",
-		])
-		.optional(),
+	// v5.2 fields
+	runtimeEnv: z.enum(["llm", "api", "browser", "vm", "local"]).optional(),
+	visibility: z.enum(["public", "private", "unlisted"]).optional(),
+	environmentVariables: z.array(z.string()).optional(),
+	// v5.4 fields
+	workflowDefinition: z.record(z.string(), z.unknown()).optional(),
+});
+
+// v5.0: Owner status change schema
+export const StatusChangeInputSchema = z.object({
+	status: z.enum(["deprecated", "published"]),
+	reason: z.string().optional(),
+	replacementSkillId: z.string().optional(),
+});
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Skill Versions Schemas (v5.2)
+// ──────────────────────────────────────────────────────────────────────────────
+
+export const SkillVersionSchema = z.object({
+	id: z.string(),
+	name: z.string(),
+	version: z.string(),
+	status: z.string(),
+	trustScore: z.number(),
+	verificationTier: z.string(),
+	runCount: z.number(),
+	executionLayer: z.string(),
+	source: z.string(),
+	skillType: z.string(),
+	runtimeEnv: z.string(),
+	visibility: z.string(),
+	cogniumScanned: z.boolean(),
+	cogniumScannedAt: z.string().nullable(),
+	createdAt: z.string().nullable(),
+	updatedAt: z.string().nullable(),
+	publishedAt: z.string().nullable(),
+});
+
+export const SkillVersionsResponseSchema = z.object({
+	slug: z.string(),
+	totalVersions: z.number(),
+	versions: z.array(SkillVersionSchema),
+});
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Eval List & Compare Schemas (v5.2)
+// ──────────────────────────────────────────────────────────────────────────────
+
+export const EvalRunSummarySchema = z.object({
+	runId: z.string(),
+	timestamp: z.string(),
+	recall1: z.number(),
+	recall5: z.number(),
+	mrr: z.number(),
+	passed: z.number(),
+	failed: z.number(),
+	fixtureCount: z.number(),
+});
+
+export const EvalListResponseSchema = z.object({
+	runs: z.array(EvalRunSummarySchema),
+});
+
+// ──────────────────────────────────────────────────────────────────────────────
+// Analytics: Revoked Impact & Vulnerable Usage Schemas (v5.2)
+// ──────────────────────────────────────────────────────────────────────────────
+
+export const RevokedImpactResponseSchema = z.object({
+	revokedCount: z.number(),
+	revokedSkills: z.array(z.record(z.string(), z.unknown())),
+	affectedSearches30d: z.number(),
+});
+
+export const VulnerableUsageResponseSchema = z.object({
+	vulnerableCount: z.number(),
+	vulnerableSkills: z.array(z.record(z.string(), z.unknown())),
+	appearedInSearch30d: z.number(),
 });

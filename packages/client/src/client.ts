@@ -12,14 +12,18 @@ import {
 	AuthorSkillsResponseSchema,
 	CompositionDetailSchema,
 	CoOccurrenceResultSchema,
+	EvalListResponseSchema,
 	FindSkillResponseSchema,
 	ForkResultSchema,
 	IndexSkillResultSchema,
 	LeaderboardResponseSchema,
 	PaginatedSkillListSchema,
+	RevokedImpactResponseSchema,
 	SkillSchema,
+	SkillVersionsResponseSchema,
 	StarStatusSchema,
 	UploadBundleResultSchema,
+	VulnerableUsageResponseSchema,
 } from "./schemas.js";
 import type {
 	AncestryNode,
@@ -30,6 +34,7 @@ import type {
 	CoOccurrenceResult,
 	CopyInput,
 	DependentNode,
+	EvalListResponse,
 	ExtendInput,
 	FeedbackParams,
 	FindSkillOptions,
@@ -42,10 +47,14 @@ import type {
 	ListSkillsOptions,
 	PaginatedSkillList,
 	PublishSkillInput,
+	RevokedImpactResponse,
 	RunicsClientOptions,
 	Skill,
+	SkillVersionsResponse,
 	StarStatus,
+	StatusChangeInput,
 	UpdateSkillInput,
+	VulnerableUsageResponse,
 	CompositionStep,
 } from "./types.js";
 
@@ -162,6 +171,9 @@ export class RunicsClient {
 			if (options?.appetite) body.appetite = options.appetite;
 			if (options?.tags) body.tags = options.tags;
 			if (options?.category) body.category = options.category;
+			// v5.2 fields
+			if (options?.runtimeEnv) body.runtimeEnv = options.runtimeEnv;
+			if (options?.visibility) body.visibility = options.visibility;
 
 			const data = await this.fetch<unknown>("/v1/search", {
 				method: "POST",
@@ -277,7 +289,7 @@ export class RunicsClient {
 		flagged: boolean;
 		categories: string[];
 	}> {
-		return await this.fetch("/v1/skills/index", {
+		return await this.fetch(`/v1/skills/${input.skillId}/index`, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify(input),
@@ -836,10 +848,8 @@ export class RunicsClient {
 			message: string;
 		}>;
 	}> {
-		return await this.fetch("/v1/admin/scan-skill", {
+		return await this.fetch(`/v1/admin/scan/${skillId}`, {
 			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ skillId }),
 		});
 	}
 
@@ -861,10 +871,10 @@ export class RunicsClient {
 			message: string;
 		}>;
 	}> {
-		return await this.fetch("/v1/admin/scan-test", {
+		return await this.fetch(`/v1/admin/scan-test/${skillId}`, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ skillId, findings }),
+			body: JSON.stringify({ findings }),
 		});
 	}
 
@@ -880,6 +890,151 @@ export class RunicsClient {
 
 		return await this.fetch(url, {
 			method: "POST",
+		});
+	}
+
+	// ──────────────────────────────────────────────────────────────────────────
+	// Skill Versions (v5.2)
+	// ──────────────────────────────────────────────────────────────────────────
+
+	async getSkillVersions(slug: string): Promise<SkillVersionsResponse> {
+		try {
+			const data = await this.fetch<unknown>(`/v1/skills/${slug}/versions`, {
+				method: "GET",
+			});
+			return SkillVersionsResponseSchema.parse(data);
+		} catch (error) {
+			if (error instanceof ZodError) {
+				throw new RunicsValidationError("Response validation failed", error);
+			}
+			throw error;
+		}
+	}
+
+	async getSkillVersion(slug: string, version: string): Promise<Skill> {
+		try {
+			const data = await this.fetch<unknown>(`/v1/skills/${slug}/${version}`, {
+				method: "GET",
+			});
+			return SkillSchema.parse(data);
+		} catch (error) {
+			if (error instanceof ZodError) {
+				throw new RunicsValidationError("Response validation failed", error);
+			}
+			throw error;
+		}
+	}
+
+	// ──────────────────────────────────────────────────────────────────────────
+	// Publish Workflow (v5.0/v5.2)
+	// ──────────────────────────────────────────────────────────────────────────
+
+	async changeSkillStatus(
+		id: string,
+		input: StatusChangeInput,
+	): Promise<{ id: string; status: string }> {
+		return await this.fetch(`/v1/skills/${id}/status`, {
+			method: "PATCH",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify(input),
+		});
+	}
+
+	async publishDraft(id: string): Promise<{ id: string; status: string }> {
+		return await this.fetch(`/v1/skills/${id}/publish`, {
+			method: "POST",
+		});
+	}
+
+	// ──────────────────────────────────────────────────────────────────────────
+	// Most-Forked Leaderboard (v5.2)
+	// ──────────────────────────────────────────────────────────────────────────
+
+	async getMostForkedLeaderboard(options?: {
+		type?: string;
+		category?: string;
+		ecosystem?: string;
+		limit?: number;
+		offset?: number;
+	}): Promise<LeaderboardResponse> {
+		try {
+			const params = new URLSearchParams();
+			if (options?.type) params.set("type", options.type);
+			if (options?.category) params.set("category", options.category);
+			if (options?.ecosystem) params.set("ecosystem", options.ecosystem);
+			if (options?.limit !== undefined) params.set("limit", options.limit.toString());
+			if (options?.offset !== undefined) params.set("offset", options.offset.toString());
+
+			const queryString = params.toString();
+			const url = queryString
+				? `/v1/leaderboards/most-forked?${queryString}`
+				: "/v1/leaderboards/most-forked";
+
+			const data = await this.fetch<unknown>(url, {
+				method: "GET",
+			});
+			return LeaderboardResponseSchema.parse(data);
+		} catch (error) {
+			if (error instanceof ZodError) {
+				throw new RunicsValidationError("Response validation failed", error);
+			}
+			throw error;
+		}
+	}
+
+	// ──────────────────────────────────────────────────────────────────────────
+	// Analytics: Revoked Impact & Vulnerable Usage (v5.2)
+	// ──────────────────────────────────────────────────────────────────────────
+
+	async getRevokedImpact(): Promise<RevokedImpactResponse> {
+		try {
+			const data = await this.fetch<unknown>("/v1/analytics/revoked-impact", {
+				method: "GET",
+			});
+			return RevokedImpactResponseSchema.parse(data);
+		} catch (error) {
+			if (error instanceof ZodError) {
+				throw new RunicsValidationError("Response validation failed", error);
+			}
+			throw error;
+		}
+	}
+
+	async getVulnerableUsage(): Promise<VulnerableUsageResponse> {
+		try {
+			const data = await this.fetch<unknown>("/v1/analytics/vulnerable-usage", {
+				method: "GET",
+			});
+			return VulnerableUsageResponseSchema.parse(data);
+		} catch (error) {
+			if (error instanceof ZodError) {
+				throw new RunicsValidationError("Response validation failed", error);
+			}
+			throw error;
+		}
+	}
+
+	// ──────────────────────────────────────────────────────────────────────────
+	// Eval: List & Compare (v5.2)
+	// ──────────────────────────────────────────────────────────────────────────
+
+	async listEvalRuns(): Promise<EvalListResponse> {
+		try {
+			const data = await this.fetch<unknown>("/v1/eval/results", {
+				method: "GET",
+			});
+			return EvalListResponseSchema.parse(data);
+		} catch (error) {
+			if (error instanceof ZodError) {
+				throw new RunicsValidationError("Response validation failed", error);
+			}
+			throw error;
+		}
+	}
+
+	async compareEvalRuns(runA: string, runB: string): Promise<unknown> {
+		return await this.fetch(`/v1/eval/compare?runA=${encodeURIComponent(runA)}&runB=${encodeURIComponent(runB)}`, {
+			method: "GET",
 		});
 	}
 }

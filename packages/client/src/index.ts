@@ -54,6 +54,14 @@ export type {
 	EvalResult,
 	AdminScanResult,
 	AdminBackfillResult,
+	// v5.2 types
+	StatusChangeInput,
+	SkillVersion,
+	SkillVersionsResponse,
+	EvalRunSummary,
+	EvalListResponse,
+	RevokedImpactResponse,
+	VulnerableUsageResponse,
 } from "./types.js";
 
 // Zod schemas (for consumers who want to extend validation)
@@ -101,6 +109,14 @@ export {
 	EvalResultSchema,
 	AdminScanResultSchema,
 	AdminBackfillResultSchema,
+	// v5.2 schemas
+	StatusChangeInputSchema,
+	SkillVersionSchema,
+	SkillVersionsResponseSchema,
+	EvalRunSummarySchema,
+	EvalListResponseSchema,
+	RevokedImpactResponseSchema,
+	VulnerableUsageResponseSchema,
 } from "./schemas.js";
 
 // Errors

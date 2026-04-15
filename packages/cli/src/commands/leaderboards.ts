@@ -8,12 +8,12 @@ import { formatJson } from "../formatters/json.js";
 export const leaderboards = defineCommand({
 	meta: {
 		name: "leaderboards",
-		description: "View skill leaderboards (human, agents, trending, most-composed)",
+		description: "View skill leaderboards (human, agents, trending, most-composed, most-forked)",
 	},
 	args: {
 		board: {
 			type: "positional",
-			description: "Leaderboard type: human, agents, trending, most-composed",
+			description: "Leaderboard type: human, agents, trending, most-composed, most-forked",
 			required: true,
 		},
 		type: {
@@ -80,10 +80,13 @@ export const leaderboards = defineCommand({
 			case "most-composed":
 				response = await client.getMostComposedLeaderboard(options);
 				break;
+			case "most-forked":
+				response = await client.getMostForkedLeaderboard(options);
+				break;
 			default:
 				console.error(
 					chalk.red(
-						`Invalid leaderboard type: ${args.board}. Choose: human, agents, trending, most-composed`,
+						`Invalid leaderboard type: ${args.board}. Choose: human, agents, trending, most-composed, most-forked`,
 					),
 				);
 				process.exit(1);
