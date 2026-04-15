@@ -17,7 +17,6 @@ import {
 	ForkResultSchema,
 	IndexSkillResultSchema,
 	LeaderboardResponseSchema,
-	PaginatedSkillListSchema,
 	RevokedImpactResponseSchema,
 	SkillSchema,
 	SkillVersionsResponseSchema,
@@ -44,8 +43,6 @@ import type {
 	ForkResult,
 	InvocationBatch,
 	LeaderboardResponse,
-	ListSkillsOptions,
-	PaginatedSkillList,
 	PublishSkillInput,
 	RevokedImpactResponse,
 	RunicsClientOptions,
@@ -218,31 +215,6 @@ export class RunicsClient {
 		}
 	}
 
-	async listSkills(options?: ListSkillsOptions): Promise<PaginatedSkillList> {
-		try {
-			const params = new URLSearchParams();
-			if (options?.cursor) params.set("cursor", options.cursor);
-			if (options?.limit !== undefined) params.set("limit", options.limit.toString());
-			if (options?.source) params.set("source", options.source);
-			if (options?.sortBy) params.set("sortBy", options.sortBy);
-			if (options?.sortOrder) params.set("sortOrder", options.sortOrder);
-
-			const queryString = params.toString();
-			const url = queryString ? `/v1/skills?${queryString}` : "/v1/skills";
-
-			const data = await this.fetch<unknown>(url, {
-				method: "GET",
-			});
-
-			return PaginatedSkillListSchema.parse(data);
-		} catch (error) {
-			if (error instanceof ZodError) {
-				throw new RunicsValidationError("Response validation failed", error);
-			}
-			throw error;
-		}
-	}
-
 	async health(): Promise<{ status: string }> {
 		return await this.fetch<{ status: string }>("/health", {
 			method: "GET",
@@ -296,17 +268,15 @@ export class RunicsClient {
 		});
 	}
 
-	async uploadBundle(skillId: string, bundle: Blob | File): Promise<{
-		skillId: string;
+	async uploadBundle(skillId: string, bundle: ArrayBuffer | Blob): Promise<{
+		id: string;
 		bundleKey: string;
-		uploadedAt: string;
+		status: string;
 	}> {
-		const formData = new FormData();
-		formData.append("bundle", bundle);
-
 		return await this.fetch(`/v1/skills/${skillId}/bundle`, {
-			method: "POST",
-			body: formData,
+			method: "PUT",
+			headers: { "Content-Type": "application/gzip" },
+			body: bundle,
 		});
 	}
 

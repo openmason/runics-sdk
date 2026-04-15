@@ -155,30 +155,6 @@ describe("RunicsClient", () => {
 		});
 	});
 
-	describe("listSkills", () => {
-		it("should fetch paginated skills", async () => {
-			const { ofetch } = await import("ofetch");
-			const mockList = {
-				skills: [],
-				cursor: null,
-				hasMore: false,
-				total: 0,
-			};
-
-			vi.mocked(ofetch).mockResolvedValue(mockList);
-
-			const result = await client.listSkills({ limit: 20 });
-
-			expect(result).toEqual(mockList);
-			expect(ofetch).toHaveBeenCalledWith(
-				expect.stringContaining("/v1/skills"),
-				expect.objectContaining({
-					method: "GET",
-				}),
-			);
-		});
-	});
-
 	describe("health", () => {
 		it("should fetch health status", async () => {
 			const { ofetch } = await import("ofetch");
