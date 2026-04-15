@@ -3,7 +3,13 @@
 	"version": "5.0.0",
 	"description": "Command-line interface for the Runics semantic skill search API",
 	"type": "module",
-	"keywords": ["runics", "cli", "skills", "semantic-search", "mcp"],
+	"keywords": [
+		"runics",
+		"cli",
+		"skills",
+		"semantic-search",
+		"mcp"
+	],
 	"homepage": "https://github.com/openmason/runics-sdk#readme",
 	"repository": {
 		"type": "git",
@@ -18,7 +24,9 @@
 	"bin": {
 		"runics": "./dist/index.js"
 	},
-	"files": ["dist"],
+	"files": [
+		"dist"
+	],
 	"scripts": {
 		"build": "tsup",
 		"test": "vitest run",
@@ -33,6 +41,7 @@
 		"consola": "^3.2.3"
 	},
 	"devDependencies": {
+		"@types/node": "^25.6.0",
 		"tsup": "^8.3.5",
 		"typescript": "^5.7.0",
 		"vitest": "^2.1.8"

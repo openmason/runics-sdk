@@ -1,4 +1,3 @@
-import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { RunicsClient, createRunicsMcpServer } from "@runics/client";
 import { defineCommand } from "citty";
@@ -46,12 +45,10 @@ export const mcpServe = defineCommand({
 			await server.connect(transport);
 			consola.info("Runics MCP server started on stdio");
 		} else if (args.transport === "sse") {
-			const port = Number.parseInt(args.port, 10);
-			const transport = new SSEServerTransport("/message", {
-				port,
-			});
-			await server.connect(transport);
-			consola.info(`Runics MCP server started on SSE at port ${port}`);
+			// TODO: SSEServerTransport is deprecated in MCP SDK v1.27+.
+			// Migrate to StreamableHTTPServerTransport with an Express/http server.
+			consola.error("SSE transport is not yet supported. Use stdio transport instead.");
+			process.exit(1);
 		} else {
 			consola.error(`Invalid transport type: ${args.transport}. Must be stdio or sse.`);
 			process.exit(1);

@@ -204,15 +204,16 @@ describe("RunicsClient", () => {
 
 			vi.mocked(ofetch).mockImplementation(async (url, options) => {
 				const error = new Error("Not found");
-				if (options?.onResponseError) {
-					options.onResponseError({
+				const handler = options?.onResponseError;
+				if (typeof handler === "function") {
+					handler({
 						request: new Request(url as string),
 						response: {
 							status: 404,
 							headers: new Headers(),
 							_data: { message: "Not found" },
-						} as Response,
-						options: {},
+						} as unknown as Response,
+						options: { headers: new Headers() },
 					});
 				}
 				throw error;
@@ -228,15 +229,16 @@ describe("RunicsClient", () => {
 				const headers = new Headers();
 				headers.set("Retry-After", "60");
 
-				if (options?.onResponseError) {
-					options.onResponseError({
+				const handler = options?.onResponseError;
+				if (typeof handler === "function") {
+					handler({
 						request: new Request(url as string),
 						response: {
 							status: 429,
 							headers,
 							_data: { message: "Rate limited" },
-						} as Response,
-						options: {},
+						} as unknown as Response,
+						options: { headers: new Headers() },
 					});
 				}
 				throw new Error("Rate limited");
@@ -256,15 +258,16 @@ describe("RunicsClient", () => {
 			const { ofetch } = await import("ofetch");
 
 			vi.mocked(ofetch).mockImplementation(async (url, options) => {
-				if (options?.onResponseError) {
-					options.onResponseError({
+				const handler = options?.onResponseError;
+				if (typeof handler === "function") {
+					handler({
 						request: new Request(url as string),
 						response: {
 							status: 500,
 							headers: new Headers(),
 							_data: { message: "Internal server error" },
-						} as Response,
-						options: {},
+						} as unknown as Response,
+						options: { headers: new Headers() },
 					});
 				}
 				throw new Error("Server error");

@@ -128,7 +128,7 @@ export const leaderboards = defineCommand({
 			const invocations =
 				entry.agentInvocationCount !== undefined ? entry.agentInvocationCount : "-";
 			const errorRate =
-				entry.errorRate !== undefined
+				entry.errorRate != null
 					? entry.errorRate > 0.1
 						? chalk.red((entry.errorRate * 100).toFixed(1))
 						: chalk.green((entry.errorRate * 100).toFixed(1))
