@@ -158,7 +158,7 @@ export const author = defineCommand({
 
 				table.push([
 					skill.name,
-					skill.type,
+					skill.skillType,
 					statusColor(skill.status),
 					skill.trustScore.toFixed(2),
 					skill.humanStarCount,

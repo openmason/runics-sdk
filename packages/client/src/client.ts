@@ -41,6 +41,8 @@ import type {
 	ForkInput,
 	ForkNode,
 	ForkResult,
+	IndexSkillInput,
+	IndexSkillResult,
 	InvocationBatch,
 	LeaderboardResponse,
 	PublishSkillInput,
@@ -244,7 +246,7 @@ export class RunicsClient {
 		});
 	}
 
-	async deleteSkill(id: string): Promise<{ success: boolean; skillId: string; deleted: boolean }> {
+	async deleteSkill(id: string): Promise<{ id: string; status: "deleted" }> {
 		return await this.fetch(`/v1/skills/${id}`, {
 			method: "DELETE",
 		});
@@ -254,14 +256,8 @@ export class RunicsClient {
 	// Skills v5
 	// ──────────────────────────────────────────────────────────────────────────
 
-	async indexSkill(input: { skillId: string; skillMd: string }): Promise<{
-		skillId: string;
-		summary: string;
-		embedding: number[];
-		flagged: boolean;
-		categories: string[];
-	}> {
-		return await this.fetch(`/v1/skills/${input.skillId}/index`, {
+	async indexSkill(input: IndexSkillInput): Promise<IndexSkillResult> {
+		return await this.fetch(`/v1/skills/${input.id}/index`, {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
 			body: JSON.stringify(input),
@@ -657,12 +653,10 @@ export class RunicsClient {
 	// ──────────────────────────────────────────────────────────────────────────
 
 	async getTierDistribution(options?: {
-		startDate?: string;
-		endDate?: string;
+		hours?: number;
 	}): Promise<{ tier1: number; tier2: number; tier3: number }> {
 		const params = new URLSearchParams();
-		if (options?.startDate) params.set("startDate", options.startDate);
-		if (options?.endDate) params.set("endDate", options.endDate);
+		if (options?.hours !== undefined) params.set("hours", options.hours.toString());
 
 		const queryString = params.toString();
 		const url = queryString ? `/v1/analytics/tiers?${queryString}` : "/v1/analytics/tiers";
@@ -673,12 +667,10 @@ export class RunicsClient {
 	}
 
 	async getMatchSources(options?: {
-		startDate?: string;
-		endDate?: string;
-	}): Promise<{ source: string; count: number; avgScore: number }[]> {
+		hours?: number;
+	}): Promise<{ matchSources: { source: string; count: number; avgScore: number }[] }> {
 		const params = new URLSearchParams();
-		if (options?.startDate) params.set("startDate", options.startDate);
-		if (options?.endDate) params.set("endDate", options.endDate);
+		if (options?.hours !== undefined) params.set("hours", options.hours.toString());
 
 		const queryString = params.toString();
 		const url = queryString
@@ -691,12 +683,10 @@ export class RunicsClient {
 	}
 
 	async getLatencyPercentiles(options?: {
-		startDate?: string;
-		endDate?: string;
+		hours?: number;
 	}): Promise<{ p50: number; p95: number; p99: number; p999: number }> {
 		const params = new URLSearchParams();
-		if (options?.startDate) params.set("startDate", options.startDate);
-		if (options?.endDate) params.set("endDate", options.endDate);
+		if (options?.hours !== undefined) params.set("hours", options.hours.toString());
 
 		const queryString = params.toString();
 		const url = queryString
@@ -709,8 +699,7 @@ export class RunicsClient {
 	}
 
 	async getCostBreakdown(options?: {
-		startDate?: string;
-		endDate?: string;
+		hours?: number;
 	}): Promise<{
 		embeddingCost: number;
 		llmCost: number;
@@ -718,8 +707,7 @@ export class RunicsClient {
 		period: string;
 	}> {
 		const params = new URLSearchParams();
-		if (options?.startDate) params.set("startDate", options.startDate);
-		if (options?.endDate) params.set("endDate", options.endDate);
+		if (options?.hours !== undefined) params.set("hours", options.hours.toString());
 
 		const queryString = params.toString();
 		const url = queryString ? `/v1/analytics/cost?${queryString}` : "/v1/analytics/cost";
@@ -730,12 +718,14 @@ export class RunicsClient {
 	}
 
 	async getFailedQueries(options?: {
+		hours?: number;
 		limit?: number;
-		offset?: number;
-	}): Promise<{ query: string; timestamp: string; tier: number; confidence: string }[]> {
+	}): Promise<{
+		queries: { query: string; timestamp: string; tier: number; confidence: string }[];
+	}> {
 		const params = new URLSearchParams();
+		if (options?.hours !== undefined) params.set("hours", options.hours.toString());
 		if (options?.limit !== undefined) params.set("limit", options.limit.toString());
-		if (options?.offset !== undefined) params.set("offset", options.offset.toString());
 
 		const queryString = params.toString();
 		const url = queryString
@@ -748,10 +738,12 @@ export class RunicsClient {
 	}
 
 	async getTier3Patterns(options?: {
-		limit?: number;
-	}): Promise<{ pattern: string; count: number; avgConfidence: string }[]> {
+		hours?: number;
+	}): Promise<{
+		patterns: { pattern: string; count: number; avgConfidence: string }[];
+	}> {
 		const params = new URLSearchParams();
-		if (options?.limit !== undefined) params.set("limit", options.limit.toString());
+		if (options?.hours !== undefined) params.set("hours", options.hours.toString());
 
 		const queryString = params.toString();
 		const url = queryString

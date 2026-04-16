@@ -43,6 +43,7 @@ export type {
 	// v5 types
 	IndexSkillInput,
 	IndexSkillResult,
+	DeleteSkillResult,
 	UploadBundleResult,
 	TierDistribution,
 	MatchSourceStats,
@@ -98,6 +99,7 @@ export {
 	// v5 schemas
 	IndexSkillInputSchema,
 	IndexSkillResultSchema,
+	DeleteSkillResultSchema,
 	UploadBundleResultSchema,
 	TierDistributionSchema,
 	MatchSourceStatsSchema,

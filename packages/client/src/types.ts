@@ -13,6 +13,7 @@ import type {
 	CoOccurrenceResultSchema,
 	CopyInputSchema,
 	CostBreakdownSchema,
+	DeleteSkillResultSchema,
 	DependentNodeSchema,
 	EvalListResponseSchema,
 	EvalResultSchema,
@@ -95,6 +96,7 @@ export type UpdateSkillInput = z.infer<typeof UpdateSkillInputSchema>;
 // v5 types - Skills
 export type IndexSkillInput = z.infer<typeof IndexSkillInputSchema>;
 export type IndexSkillResult = z.infer<typeof IndexSkillResultSchema>;
+export type DeleteSkillResult = z.infer<typeof DeleteSkillResultSchema>;
 export type UploadBundleResult = z.infer<typeof UploadBundleResultSchema>;
 
 // v5 types - Analytics

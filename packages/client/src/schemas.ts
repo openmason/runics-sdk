@@ -247,8 +247,24 @@ export const CompositionDetailSchema = z.object({
 	id: z.string(),
 	name: z.string(),
 	slug: z.string(),
-	type: z.enum(["composition", "pipeline"]),
-	status: z.enum(["draft", "published", "deprecated", "archived"]),
+	skill_type: z.enum([
+		"atomic",
+		"auto-composite",
+		"human-composite",
+		"forked",
+		"composition",
+		"pipeline",
+	]),
+	status: z.enum([
+		"draft",
+		"published",
+		"deprecated",
+		"archived",
+		"vulnerable",
+		"revoked",
+		"degraded",
+		"contains-vulnerable",
+	]),
 	description: z.string(),
 	trust_score: z.number(),
 	steps: z.array(
@@ -263,7 +279,7 @@ export const CompositionDetailSchema = z.object({
 			onError: z.enum(["fail", "skip", "retry"]),
 		}),
 	),
-});
+}).passthrough();
 
 // ──────────────────────────────────────────────────────────────────────────────
 // Lineage Schemas
@@ -390,10 +406,7 @@ export const AuthorSkillsResponseSchema = z.object({
 			id: z.string(),
 			name: z.string(),
 			slug: z.string(),
-			type: z.enum([
-				"skill",
-				"composition",
-				"pipeline",
+			skillType: z.enum([
 				"atomic",
 				"auto-composite",
 				"human-composite",
@@ -427,16 +440,37 @@ export const AuthorSkillsResponseSchema = z.object({
 // ──────────────────────────────────────────────────────────────────────────────
 
 export const IndexSkillInputSchema = z.object({
-	skillId: z.string(),
-	skillMd: z.string(),
+	id: z.string(),
+	name: z.string(),
+	slug: z.string(),
+	version: z.string(),
+	source: z.string(),
+	description: z.string(),
+	agentSummary: z.string().optional(),
+	tags: z.array(z.string()),
+	category: z.string().optional(),
+	schemaJson: z.record(z.string(), z.unknown()).optional(),
+	authRequirements: z.record(z.string(), z.unknown()).optional(),
+	installMethod: z.record(z.string(), z.unknown()).optional(),
+	trustScore: z.number().min(0).max(1),
+	capabilitiesRequired: z.array(z.string()).optional(),
+	executionLayer: z.string(),
+	tenantId: z.string(),
 });
 
 export const IndexSkillResultSchema = z.object({
+	success: z.boolean(),
 	skillId: z.string(),
-	summary: z.string(),
-	embedding: z.array(z.number()),
-	flagged: z.boolean(),
-	categories: z.array(z.string()),
+	indexed: z.boolean(),
+	contentSafe: z.boolean(),
+	agentSummary: z.string(),
+	alternateCount: z.number(),
+	alternateQueries: z.array(z.string()).optional(),
+});
+
+export const DeleteSkillResultSchema = z.object({
+	id: z.string(),
+	status: z.literal("deleted"),
 });
 
 export const UploadBundleResultSchema = z.object({
