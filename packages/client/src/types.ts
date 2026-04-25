@@ -153,14 +153,6 @@ export interface FeedbackParams {
 	position: number;
 }
 
-export interface ListSkillsOptions {
-	cursor?: string;
-	limit?: number;
-	source?: string;
-	sortBy?: "name" | "trust_score" | "created_at";
-	sortOrder?: "asc" | "desc";
-}
-
 export interface RunicsClientOptions {
 	baseUrl?: string;
 	tenantId?: string;

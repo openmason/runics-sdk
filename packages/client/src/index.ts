@@ -13,8 +13,6 @@ export type {
 	FindSkillOptions,
 	FindSkillResponse,
 	GenerationHints,
-	ListSkillsOptions,
-	PaginatedSkillList,
 	RunicsClientOptions,
 	SearchMeta,
 	SearchTrace,

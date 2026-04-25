@@ -191,6 +191,36 @@ export const SkillSchema = z.object({
 	shareUrl: z.string().optional(),
 	// v5.4 fields
 	workflowDefinition: z.record(z.string(), z.unknown()).nullable().optional(),
+	// Extended detail fields (returned by GET /v1/skills/:slug)
+	mcpUrl: z.string().nullable().optional(),
+	skillMd: z.string().nullable().optional(),
+	sourceUrl: z.string().nullable().optional(),
+	categories: z.array(z.string()).optional(),
+	ecosystem: z.string().nullable().optional(),
+	language: z.string().nullable().optional(),
+	license: z.string().nullable().optional(),
+	readme: z.string().nullable().optional(),
+	r2BundleKey: z.string().nullable().optional(),
+	authorId: z.string().nullable().optional(),
+	tenantId: z.string().nullable().optional(),
+	replacementSlug: z.string().nullable().optional(),
+	cogniumScannedAt: z.string().nullable().optional(),
+	contentSafetyPassed: z.boolean().nullable().optional(),
+	// Analysis fields
+	qualityScore: z.number().nullable().optional(),
+	qualityTier: z.string().nullable().optional(),
+	qualityResults: z.record(z.string(), z.unknown()).nullable().optional(),
+	qualityAnalyzedAt: z.string().nullable().optional(),
+	trustScoreV2: z.number().nullable().optional(),
+	trustTier: z.string().nullable().optional(),
+	trustResults: z.record(z.string(), z.unknown()).nullable().optional(),
+	trustAnalyzedAt: z.string().nullable().optional(),
+	understandResults: z.record(z.string(), z.unknown()).nullable().optional(),
+	understandAnalyzedAt: z.string().nullable().optional(),
+	specAlignmentScore: z.number().nullable().optional(),
+	specGaps: z.array(z.string()).nullable().optional(),
+	specAnalyzedAt: z.string().nullable().optional(),
+	publishedAt: z.string().nullable().optional(),
 });
 
 // PaginatedSkillList schema
@@ -474,9 +504,9 @@ export const DeleteSkillResultSchema = z.object({
 });
 
 export const UploadBundleResultSchema = z.object({
-	skillId: z.string(),
+	id: z.string(),
 	bundleKey: z.string(),
-	uploadedAt: z.string(),
+	status: z.string(),
 });
 
 // ──────────────────────────────────────────────────────────────────────────────

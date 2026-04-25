@@ -227,7 +227,7 @@ export class RunicsClient {
 	// Skills CRUD
 	// ──────────────────────────────────────────────────────────────────────────
 
-	async publishSkill(input: PublishSkillInput): Promise<{ id: string; slug: string; status: string }> {
+	async publishSkill(input: PublishSkillInput): Promise<{ id: string; slug: string; version: string; status: string }> {
 		return await this.fetch("/v1/skills", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
@@ -269,11 +269,19 @@ export class RunicsClient {
 		bundleKey: string;
 		status: string;
 	}> {
-		return await this.fetch(`/v1/skills/${skillId}/bundle`, {
-			method: "PUT",
-			headers: { "Content-Type": "application/gzip" },
-			body: bundle,
-		});
+		try {
+			const data = await this.fetch<unknown>(`/v1/skills/${skillId}/bundle`, {
+				method: "PUT",
+				headers: { "Content-Type": "application/gzip" },
+				body: bundle,
+			});
+			return UploadBundleResultSchema.parse(data);
+		} catch (error) {
+			if (error instanceof ZodError) {
+				throw new RunicsValidationError("Response validation failed", error);
+			}
+			throw error;
+		}
 	}
 
 	// ──────────────────────────────────────────────────────────────────────────

@@ -11,7 +11,7 @@ const main = defineCommand({
 	meta: {
 		name: "runics",
 		description: "Runics skill search CLI",
-		version: "0.1.0",
+		version: "5.0.0",
 	},
 	subCommands: {
 		search,
